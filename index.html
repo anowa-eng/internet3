@@ -1,0 +1,779 @@
+<!--
+  Internet3
+  version 0.0.4
+  
+  Please do not copy the website without permission.
+  If the website is copied or forked, please give credit to @anowa-eng.
+
+  Credit is given to the people that own parts of the code.
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Internet&#x00b3;</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Inter"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script
+      src="https://kit.fontawesome.com/0090bc1e39.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://rawgit.com/ajaxorg/ace-builds/master/src-min/ace.js"></script>
+    <script src="internet3.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300&family=JetBrains+Mono:wght@200&display=swap");
+
+      :root {
+        --mono: Fira Code, monospace;
+      }
+
+      code {
+        font-family: var(--mono);
+        color: #333;
+        background: #ddd;
+        padding: 2px;
+        border-radius: 5px;
+        -webkit-border-radius: 5px;
+      }
+
+      code.multi {
+        display: block;
+        padding: 10px;
+      }
+
+      html {
+        word-wrap: break-word;
+      }
+
+      * {
+        margin: 0;
+      }
+
+      body,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: NexaRegular, Inter, sans-serif;
+      }
+
+      #search {
+        height: 100vh;
+        background: linear-gradient(#308fba, #2c66b8);
+        display: flex;
+        flex-direction: column;
+        color: #fff;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #logo {
+        text-align: center;
+      }
+
+      .heading {
+        font-size: 24pt;
+        letter-spacing: 0.15em;
+        font-family: Nexa Bold, Inter, sans-serif;
+        text-align: center;
+      }
+
+      #result-count,
+      .error-code {
+        font-size: 32pt;
+        letter-spacing: 0.15em;
+        font-family: Nexa Bold, Inter, sans-serif;
+        text-align: center;
+      }
+
+      .shadow {
+        filter: drop-shadow(0 0 3px #444);
+      }
+
+      #search-bar {
+        display: flex;
+        flex-direction: row;
+      }
+
+      #query {
+        padding: 10px 15px;
+        width: 75vw;
+        border-radius: 5px 0 0 5px;
+        border: none;
+        background: #fff;
+        transition: linear 300ms;
+        caret-color: #333;
+      }
+
+      #query.error {
+        background: #d00;
+      }
+
+      #query.error::placeholder {
+        color: pink;
+      }
+
+      #query:hover {
+        background: #aaa;
+      }
+
+      #query:focus {
+        background: #333;
+        color: #fff;
+        outline: 0;
+      }
+
+      #search-button {
+        padding: 10px 30px;
+        background: #1e90ff;
+        color: #fff;
+        border-radius: 0 5px 5px 0;
+        border: none;
+        transition: linear 150ms;
+      }
+
+      #search-button:hover {
+        background: navy;
+      }
+
+      #search-results {
+        margin: 0;
+        min-height: 100vh;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(dodgerblue, #407be3);
+        color: white;
+      }
+
+      .results.less-11,
+      .results.more-10 #page {
+        margin: 0;
+        display: grid;
+        grid-template-columns: calc(100% / 3) calc(100% / 3) calc(100% / 3);
+        text-align: center;
+        align-items: center;
+        width: 95vw;
+      }
+
+      .results .result {
+        min-height: 30px;
+        margin: 5px;
+        background: #eee;
+        color: #333;
+        padding: 10px;
+        border-radius: 5px;
+        word-wrap: break-word;
+        filter: drop-shadow(0 0 3px #444);
+        animation: zoomIn 1s;
+      }
+
+      .results .result .name {
+        font-family: Nexa Bold, Inter, sans-serif, Inter;
+        letter-spacing: 0.1em;
+      }
+
+      .results .result .content {
+        color: grey;
+      }
+
+      #version {
+        opacity: 50%;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        text-transform: lowercase;
+        font-family: var(--mono);
+      }
+
+      #no-results {
+        background: #eee;
+        color: #333;
+        animation: fadeInUp 1s;
+      }
+
+      .error-screen1 {
+        background: #eee !important;
+        color: #333 !important;
+      }
+
+      button.back[theme="grey"],
+      button.back[data-theme="grey"],
+      button.back[theme="gray"],
+      button.back[data-theme="gray"] {
+        outline: none;
+        background: #444;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 50px;
+        border: none;
+        filter: drop-shadow(0 4px 0 #777);
+        transition: all ease-out 100ms;
+        text-transform: uppercase;
+      }
+
+      button.back[theme="blue"],
+      button.back[data-theme="blue"] {
+        outline: none;
+        background: #6176ed;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 50px;
+        border: none;
+        filter: drop-shadow(0 4px 0 navy);
+        transition: all ease-out 100ms;
+        text-transform: uppercase;
+      }
+
+      .back:nth-of-type(1) {
+        margin-top: 30px;
+      }
+
+      button.back[theme="grey"]:active,
+      button.back[data-theme="grey"]:active,
+      button.back[data-theme="grey"]:active,
+      button.back[data-theme="gray"]:active {
+        outline: none;
+        transform: translateY(2px);
+        filter: drop-shadow(0 2px 0 #777);
+      }
+
+      button.back[theme="blue"]:active,
+      button.back[data-theme="blue"]:active {
+        outline: none;
+        transform: translateY(2px);
+        filter: drop-shadow(0 2px 0 navy);
+      }
+
+      .go {
+        padding: 10px 20px;
+        border: none;
+        background: greenyellow;
+        filter: drop-shadow(0 4px 0 green);
+        outline: none;
+        border-radius: 10px;
+        transition: 150ms;
+        text-transform: uppercase;
+        text-decoration: none;
+      }
+
+      .go:hover {
+        padding: 10px 20px;
+        border: none;
+        background: #369c2d;
+        filter: drop-shadow(0 4px 0 green);
+        outline: none;
+        border-radius: 10px;
+        transition: 150ms;
+      }
+
+      .go:active {
+        outline: none;
+        transform: translateY(2px);
+        filter: drop-shadow(0 2px 0 green);
+      }
+
+      #page-n {
+        margin-inline: 10px;
+        display: inline;
+        background: #eee;
+        border: none;
+        padding: 10px;
+        border-radius: 10px;
+        font-family: Nexa Bold, Inter, sans-serif, Inter;
+        font-size: 16pt;
+        text-align: center;
+        color: #444;
+        letter-spacing: 0.15em;
+      }
+
+      #previous,
+      #next {
+        background: none;
+        border: 0;
+        outline: 0;
+        color: #ddd;
+        filter: drop-shadow(0 0 3px black);
+        transition: all ease-out 150ms;
+      }
+
+      #previous:hover,
+      #next:hover {
+        color: #99ccff;
+      }
+
+      #previous:active,
+      #next:active {
+        color: cadetblue;
+      }
+
+      .go-icon,
+      .back-icon {
+        margin-right: 10px;
+      }
+
+      .back.mobile {
+        border-radius: 5px;
+        padding: 10px;
+      }
+    </style>
+    <script>
+      // Global variable storage
+
+      var PAGE_N = 1,
+        _scope;
+    </script>
+    <script>
+      const oneBased = (number) => number - 1;
+    </script>
+    <script>
+      const $$ = (selector) => document.querySelectorAll(selector);
+      var pageListSliceNums = {
+        beginning: 0,
+        end: 10
+      };
+    </script>
+    <script>
+      var __previous = false,
+        __next = false;
+    </script>
+    <script>
+      $(function () {
+        setInterval(function () {
+          let needsClassification = false;
+          $(".back").each(function () {
+            if ($(this).hasClass("mobile")) needsClassification = true;
+          });
+          if ($(window).innerWidth() < 768 && !$) $(".back").addClass("mobile");
+        }, 1);
+      });
+    </script>
+  </head>
+
+  <body>
+    <div data-ng-app="app" data-ng-controller="main" id="document">
+      <div class="w3-container" id="search">
+        <p id="version">version 0.0.4</p>
+        <div id="logo" class="shadow">
+          <img
+            src="src/assets/internet.png"
+            width="48"
+            height="48"
+            alt="Icon"
+            crossorigin
+            id="logo-icon"
+          />
+          <p class="heading" id="logo-text">Internet<sup>3</sup></p>
+        </div>
+        <div id="search-bar">
+          <input id="query" data-ng-model="query" />
+          <button id="search-button">
+            <i class="fas fa-search"></i>
+          </button>
+          <script>
+            const phrases = [
+              "Surf the web",
+              "What are you looking for?",
+              "Look something up on the third internet"
+            ];
+            const randomItem = (array) =>
+              array[Math.floor(Math.random() * array.length)];
+            $("#query").attr({
+              placeholder: randomItem(phrases)
+            });
+          </script>
+          <script>
+            $(function () {
+              var $isFocused = false;
+              $("#query")
+                .focus(function () {
+                  $isFocused = true;
+                })
+                .blur(function () {
+                  $isFocused = false;
+                });
+              $(document).keypress(function (event) {
+                if (event.key === "Enter") {
+                  $(".w3-container")
+                    .eq(0)
+                    .find("#search-button")
+                    .trigger("click");
+                }
+              });
+              $(".w3-container").eq(2).hide();
+              $(".w3-container").eq(0).show();
+              $(".w3-container").eq(1).show();
+              $(".w3-container")
+                .eq(0)
+                .find("#search-button")
+                .click(function () {
+                  if ($("#query").val() !== "") {
+                    $("#query").removeClass("error");
+                    $(".w3-container").eq(0).hide();
+                    $(".w3-container").eq(1).hide();
+                    $(".w3-container").eq(2).show();
+                  } else {
+                    internet3.play("invalid");
+                    $("#search-bar").css({
+                      animation: "shakeX 1s"
+                    });
+                    $("#query").addClass("error");
+                    setTimeout(function () {
+                      $("#search-bar").css({
+                        animation: ""
+                      });
+                      $("#query").toggleClass("error");
+                    }, 1_000);
+                  }
+                });
+            });
+          </script>
+        </div>
+      </div>
+      <div class="w3-container w3-black" id="history">
+        <p class="heading">About</p>
+        <p>
+          In November 2020, a Scratcher with the username of
+          <span style="font-style: italic;">anova01</span> came up with an idea
+          to create a &ldquo;mini-internet&rdquo; named
+          <span style="font-style: italic;">anova01&apos;s Internet</span>.
+          Later, he renamed it to
+          <span style="font-weight: bold;">Internet<sup>3</sup></span
+          >.
+        </p>
+      </div>
+      <div class="w3-container" id="search-results">
+        <div data-ng-if="count > 0">
+          <div class="result-counter shadow">
+            <p id="result-count" data-ng-bind="count"></p>
+            <p>
+              <ng-pluralize
+                data-count="count"
+                data-when='
+                  {
+                    "0": "results were",
+                    "one": "result was",
+                    "other": "results were"
+                  }
+                '
+              >
+              </ng-pluralize>
+              found for your query.
+            </p>
+            <hr />
+          </div>
+          <div data-ng-if="count < 11" class="results less-11">
+            <div class="result" data-ng-repeat="site in filtered_sites">
+              <div class="name" data-ng-bind="ellipsis(site.name)"></div>
+              <div
+                class="content"
+                data-ng-bind="ellipsis(parse(site.content))"
+              ></div>
+              <button class="go" id="go-{{site.id}}">
+                <i class="fas fa-chevron-right" class="go-icon"></i>
+                Go!
+              </button>
+            </div>
+          </div>
+          <div data-ng-if="count > 10" class="results more-10">
+            <div id="page">
+              <div
+                class="result"
+                data-ng-repeat="n in repeat(10)"
+                data-ng-hide="NOT(CONVERT(page_sites[n]))"
+              >
+                <div
+                  class="name"
+                  data-ng-bind="ellipsis(page_sites[n].name)"
+                ></div>
+                <div
+                  class="content"
+                  data-ng-bind="ellipsis(parse(page_sites[n].content))"
+                ></div>
+                <button class="go" id="go-{{page_sites[n].id}}">
+                  <i class="fas fa-chevron-right go-icon"></i>
+                  Go!
+                </button>
+              </div>
+            </div>
+            <div id="page-input">
+              <button id="previous">
+                <i class="fas fa-chevron-left go-icon"></i>
+              </button>
+              <div id="page-n" data-ng-bind="page"></div>
+              <button id="next">
+                <i class="fas fa-chevron-right go-icon"></i>
+              </button>
+            </div>
+          </div>
+          <button class="back" data-screen-href="search" data-theme="blue">
+            <i class="fas fa-arrow-left back-icon"></i>
+            <span class="back-text">Go back</span>
+          </button>
+        </div>
+        <div data-ng-if="count == 0" id="no-results" class="less-1">
+          <p class="heading">
+            <i class="fas fa-exclamation-circle"></i>
+            No results were found for &quot;{{ellipsis(query)}}&quot;.
+          </p>
+          <p>Try searching for something else.</p>
+          <button class="back" data-screen-href="search" data-theme="gray">
+            <i class="fas fa-arrow-left back-icon"></i>
+            <span class="back-text">Go back</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="additional-scripts">
+        <div id="jquery-scripts">
+          <script>
+            function $if(boolean, run) {
+              var _boolean = boolean;
+              if (boolean) {
+                switch (typeof run) {
+                  case "string":
+                    new Function(run.split("\n"))();
+                    break;
+                  case "function":
+                    run();
+                    break;
+                  default:
+                    throw new TypeError("Bad type");
+                }
+              }
+              return {
+                $else(run) {
+                  if (!_boolean) {
+                    switch (typeof run) {
+                      case "string":
+                        new Function(run.split("\n"))();
+                        break;
+                      case "function":
+                        run();
+                        break;
+                      default:
+                        throw new TypeError("Bad type");
+                    }
+                  }
+                },
+                $elif: $if
+              };
+            }
+
+            function $screen(string) {
+              switch (string) {
+                case "search":
+                  $(".w3-container")
+                    .eq(2)
+                    .fadeOut(300, function () {
+                      $(".w3-container").eq(0).fadeIn(300);
+                      $(".w3-container").eq(1).fadeIn(300);
+                      $("#query").val("");
+                    });
+                  break;
+                default:
+                  break;
+              }
+            }
+          </script>
+          <script>
+            $(function () {
+              $(document)
+                .on("click", ".back", function () {
+                  $screen(
+                    $(this).attr("data-screen-href") ||
+                      $(this).attr("screen-href")
+                  );
+                })
+                .on("click", ".go", function () {
+                  location.href = `/site_viewer.html?site_id=${$(this)
+                    .attr("id")
+                    .replace(/^go-/, "")}`;
+                });
+            });
+          </script>
+        </div>
+        <div id="plain-scripts"></div>
+        <div id="angularjs-scripts">
+          <script>
+            angular
+              .module("app", [])
+              .config(function ($rootScopeProvider) {
+                $rootScopeProvider.digestTtl(Infinity);
+              })
+              .controller("main", [
+                "$scope",
+                "$http",
+                "$interval",
+                "$rootScope",
+                "$log",
+                "$timeout",
+                async function (
+                  $scope,
+                  $http,
+                  $interval,
+                  $rootScope,
+                  $log,
+                  $timeout
+                ) {
+                  _scope = $scope;
+                  _http = $http;
+                  _interval = $interval;
+                  _rootScope = $rootScope;
+                  _log = $log;
+
+                  $scope.page = 1;
+                  $scope.stats = {};
+                  $scope.prop_names = (object) =>
+                    Object.getOwnPropertyNames(object);
+
+                  $scope.is_ok = (status) => /^2/.test(status);
+
+                  $(function () {
+                    $(document)
+                      .on("click", "#previous", () =>
+                        $rootScope.$broadcast("pageChanged", {
+                          increase: false,
+                          pageNumber: $scope.page
+                        })
+                      )
+                      .on("click", "#next", () =>
+                        $rootScope.$broadcast("pageChanged", {
+                          increase: true,
+                          pageNumber: $scope.page
+                        })
+                      );
+                  });
+
+                  // Code from CoffeeScript compiler
+
+                  $scope.internet3 = internet3;
+
+                  $scope1 = $scope;
+                  var $http = $http;
+                  var list = [0, 10];
+
+                  $scope.imports_include = (string) =>
+                    $scope.imports.includes(string);
+                  $scope.NOT = (boolean) => !boolean;
+                  $scope.AND = function (...args) {
+                    var string = "";
+                    [...arguments].forEach(function (x) {
+                      string += `${x} &&`;
+                    });
+                    string = string.replace(/(\s*)&&$/, "");
+                    return new Function(`return ${string}`);
+                  };
+                  $scope.OR = (boolean1, boolean2) => boolean1 || boolean2;
+                  $scope.CONVERT = (nonboolean1) => Boolean(nonboolean1);
+                  $scope.repeat = function (number) {
+                    var array = [];
+                    for (var i = 0; array.length < number; i++) array.push(i);
+                    return array;
+                  };
+                  $scope.parse = function (string) {
+                    var parser = new DOMParser();
+                    return !parser.parseFromString(string, "text/html")
+                      ? ""
+                      : parser.parseFromString(string, "text/html").body
+                          .innerText;
+                  };
+                  $scope.round_up = Math.ceil;
+                  $scope.round_down = Math.floor;
+                  $scope.ellipsis = (string) =>
+                    !string ? "" : string.replace(/[^]+(?=^([^]{50}))/, "...");
+                  $("#search-button").click(function (event) {
+                    if ($("#query").val() == "") event.preventDefault();
+                    else $scope.$emit("search");
+                  });
+                  $scope.$on("search", function () {
+                    console.time("How long the request took");
+                    $http.get("sites.json").then((response) => {
+                      console.timeEnd("How long the request took");
+                      $scope.request_data = response;
+                      $scope.sites = response.data.sites;
+                      $scope.filtered_sites = $scope.sites.filter((i) =>
+                        i["name"].includes($("#query").val())
+                      );
+                      $scope.count = $scope.filtered_sites.length;
+
+                      $scope.page_sites = $scope.filtered_sites.slice(0, 10);
+
+                      if ($scope.count > 0)
+                        $("#search-results").removeClass("error-screen1");
+
+                      if ($scope.filtered_sites.length === 0)
+                        $("#search-results").addClass("error-screen1");
+                      else $("#search-results").removeClass("error-screen1");
+
+                      $scope.$on("pageChanged", function (event, eventData) {
+                        function refuse(scope) {
+                          pageListSliceNums.beginning -= eventData.increase
+                            ? 10
+                            : -10;
+                          pageListSliceNums.end -= eventData.increase
+                            ? 10
+                            : -10;
+                          scope.page -= eventData.increase ? 1 : -1;
+                          scope.page_sites = scope.filtered_sites.slice(
+                            pageListSliceNums.beginning,
+                            pageListSliceNums.end
+                          );
+                          scope.$digest();
+                        }
+                        $scope.page += eventData.increase ? 1 : -1;
+
+                        pageListSliceNums.beginning += eventData.increase
+                          ? 10
+                          : -10;
+                        pageListSliceNums.end += eventData.increase ? 10 : -10;
+
+                        $(".result").fadeOut(200, function () {
+                          $scope.page_sites = $scope.filtered_sites.slice(
+                            pageListSliceNums.beginning,
+                            pageListSliceNums.end
+                          );
+                          if (!$scope.page_sites.length) refuse($scope);
+                          else $scope.$digest();
+                          $(".result")
+                            .show()
+                            .css({
+                              animation: `${
+                                eventData.increase
+                                  ? "fadeInRight"
+                                  : "fadeInLeft"
+                              } 1s`
+                            });
+                        });
+                      });
+                    });
+                  });
+                }
+              ])
+              .filter("live", function () {
+                var filter = (input) => input;
+                filter.$stateful = true;
+                return filter;
+              });
+          </script>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
