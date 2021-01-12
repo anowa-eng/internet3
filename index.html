@@ -602,7 +602,7 @@
                   );
                 })
                 .on("click", ".go", function () {
-                  location.href = `/site_viewer.html?site_id=${$(this)
+                  location.href = `/site_viewer?site_id=${$(this)
                     .attr("id")
                     .replace(/^go-/, "")}`;
                 });
@@ -704,7 +704,7 @@
                   });
                   $scope.$on("search", function () {
                     console.time("How long the request took");
-                    $http.get("sites.json").then((response) => {
+                    $http.get("data/sites.json").then((response) => {
                       console.timeEnd("How long the request took");
                       $scope.request_data = response;
                       $scope.sites = response.data.sites;
