@@ -1,0 +1,60 @@
+{
+  "sites": [
+    {
+      "name": "gakou",
+      "content": "<html><body><p>Click go!</p></body></html>",
+      "author": "anova01",
+      "id": 1
+    },
+    {
+      "name": "sakour",
+      "content": "<html><body><p>Click go!</p></body></html>",
+      "id": 2
+    },
+    {
+      "name": "marcken",
+      "content": "<html><body><p>Ooh i forgot.</p></body></html>",
+      "id": 3
+    },
+    {
+      "name": "siterstentoaeoæl",
+      "content": "<html><body><p>Ooh i forgot.</p></body></html>",
+      "id": 4
+    },
+    {
+      "name": "ajakono",
+      "content": "<html><body><p>This is a really, really, really long description of this website on AJAX ...or <b>not</b>.</p></body></html>",
+      "id": 5
+    },
+    {
+      "name": "thawng",
+      "content": "<html><body><p>Test website</p></body></html>",
+      "id": 6
+    },
+    {
+      "name": "daso",
+      "content": "<html><body><p>Test website</p></body></html>",
+      "id": 7
+    },
+    {
+      "name": "anau",
+      "content": "<html><body><p>Test website</p></body></html>",
+      "id": 8
+    },
+    {
+      "name": "caco",
+      "content": "<html><body><p>Test website</p></body></html>",
+      "id": 9
+    },
+    {
+      "name": "thawngdae",
+      "content": "<html><body><p>Test website</p></body></html>",
+      "id": 10
+    },
+    {
+      "name": "aaco",
+      "content": "<html><body><p>Test website</p></body></html>",
+      "id": 11
+    }
+  ]
+}
