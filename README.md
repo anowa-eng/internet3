@@ -1,2 +1,2 @@
 # internet3
-nopenopenopenopenopenopenopenopenopenopenopenopenopenopenopenopenopenopenopenopenopenopenopenopenopenopenopenopenopenopenopenopenope
+This project is pretty much dead :/
